@@ -3,6 +3,12 @@
 
         SECTION .text           ; Define Text Section
 
+        MOV     ax, 0xB800      ; Move to Video Memory Addr
+        MOV     ds, ax          ; Copy AX Value into DS Segment Register
+
+        MOV     byte [ 0x00 ], 'M'
+        MOV     byte [ 0x01 ], 0x4A
+
         JMP     $               ; Infinite Loop
         TIMES   510 - ( $ - $$ ) db 0x00 ; Fill 0x00 into 0 ~ 510 Byte
 
