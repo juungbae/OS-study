@@ -3,13 +3,47 @@
 
         SECTION .text           ; Define Text Section
 
+        JMP     0x07C0:START    ; Copy 0x07C0 in CS Segment Register / Move to Start Label
+
+START:
+        MOV     ax, 0x07C0
+        MOV     ds, ax
+
         MOV     ax, 0xB800      ; Move to Video Memory Addr
-        MOV     ds, ax          ; Copy AX Value into DS Segment Register
+        MOV     es, ax          ; Copy AX Value into DS Segment Register
 
-        MOV     byte [ 0x00 ], 'M'
-        MOV     byte [ 0x01 ], 0x4A
+        MOV     si, 0           ; Initial SI ( String Index ) Register
 
-        JMP     $               ; Infinite Loop
+.SCREENCLEARLOOP:
+        MOV     BYTE [ es:si ], 0
+        MOV     BYTE [ es:si + 1 ], 0x07
+
+        ADD     si, 2
+
+        CMP     si, 80 * 25 * 2
+
+        JL      .SCREENCLEARLOOP
+
+        MOV     si, 0           ; Initial SI ( Source Index ) Register
+        MOV     di, 0           ; Initial DI ( Destination Index ) Register
+
+.MESSAGELOOP:
+        MOV     cl, BYTE [ si + MESSAGE1 ]
+
+        CMP     cl, 0
+        JE      .MESSAGEEND
+
+        MOV     BYTE [ es:di ], cl
+
+        ADD     si, 1
+        ADD     di, 2
+
+        JMP     .MESSAGELOOP
+.MESSAGEEND:
+        JMP     $
+
+MESSAGE1:       db      'Operatig System Boot Loader Start', 0
+
         TIMES   510 - ( $ - $$ ) db 0x00 ; Fill 0x00 into 0 ~ 510 Byte
 
         DB      0x55
