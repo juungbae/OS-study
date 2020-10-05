@@ -57,7 +57,7 @@ RESETDISK:                              ; Call BIOS Reset Function
         MOV     es, si
         MOV     bx, 0x0000              ; 0x1000:0000
 
-        MOV     di, word [TOTALSECTORCOUNT]  ; Set Sector number of OS Image to copy
+        MOV     di, word [ TOTALSECTORCOUNT ]  ; Set Sector number of OS Image to copy
 
 ; Read Disk
 READDATA:  
@@ -91,14 +91,14 @@ READDATA:
         MOV     byte [ SECTORNUMBER ], 0x01
 
         CMP     byte [ HEADNUMBER ], 0x00
-        JNE     READDATE
+        JNE     READDATA
 
         ADD     byte [ TRACKNUMBER ], 0x01
         JMP     READDATA
 
 READEND:
         push    IMAGELOADCOMPLETEMESSAGE
-        push    2                       ; Y coordinate
+        push    1                       ; Y coordinate
         push    20                      ; X coordinate 
         call    PRINTMESSAGE
         add     sp, 6
@@ -135,27 +135,27 @@ PRINTMESSAGE:
         MOV     es, ax
 
         ; Calculate Line address using y coord
-        MOV     ax, word [bp+6]         ; args 2 ( Y coord )
+        MOV     ax, word [ bp + 6 ]         ; args 2 ( Y coord )
         MOV     si, 160                 ; Bytes of One line
         MUL     si                      ; if mul has one operand, it means ax *= operand
         MOV     di, ax                  ; Set Y address
 
         ; Calculate x coord
-        MOV     ax, word [bp+4]         ; args 1 ( X coord )
+        MOV     ax, word [ bp + 4 ]         ; args 1 ( X coord )
         MOV     si, 2                     
         MUL     si
         ADD     di, ax
 
         ; Set target string address
-        MOV     si, word [bp+8]
+        MOV     si, word [ bp + 8 ]
 
 .MESSAGELOOP:
-        MOV     cl, byte [si]           ; Copy one byte into cl register ( low of CX )
+        MOV     cl, byte [ si ]           ; Copy one byte into cl register ( low of CX )
 
         CMP     cl, 0                   
         JE      .MESSAGEEND             ; End loop if message is end
 
-        MOV     byte[es:di], cl         ; if loop not end, print character on 0xB8000:di
+        MOV     byte[ es:di ], cl         ; if loop not end, print character on 0xB8000:di
         
         ADD     si, 1                   ; Move character index + 1
         ADD     di, 2                   ; Move Video memory index + 2
@@ -169,6 +169,7 @@ PRINTMESSAGE:
         POP     di
         POP     si
         POP     es
+        POP     bp
         RET
 
 ;; Data Area 
