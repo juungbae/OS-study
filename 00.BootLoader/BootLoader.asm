@@ -5,7 +5,7 @@
 
         JMP     0x07C0:START    ; Copy 0x07C0 in CS Segment Register / Move to Start Label
 
-TOTALSECTORCOUNT: dw 1024       ; Size of Operating System without bootloader
+TOTALSECTORCOUNT: dw 1          ; Size of Operating System without bootloader
 
 START:
         MOV     ax, 0x07C0      ; Set bootloader's start address to Segment Register Value
