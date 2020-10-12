@@ -50,7 +50,7 @@ PROTECTEDMODE:
 ; Function Parts
 PRINTMESSAGE:
             PUSH            ebp
-            MOV             esp, ebp
+            MOV             ebp, esp
             
             PUSH            esi
             PUSH            edi
@@ -78,7 +78,7 @@ PRINTMESSAGE:
             CMP             cl, 0
             JE              .MESSAGEEND
 
-            MOV             BYTE [ edi + 0xB800 ], cl
+            MOV             BYTE [ edi + 0xB8000 ], cl
             
             ADD             esi, 1
             ADD             edi, 2 
