@@ -45,7 +45,7 @@ PROTECTEDMODE:
             CALL            PRINTMESSAGE
             ADD             esp, 12
 
-            JMP             $
+            JMP             DWORD 0x08: 0x10200  ; Move to C Kernal 0x10200 Addr
 
 ; Function Parts
 PRINTMESSAGE:
